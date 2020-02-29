@@ -404,6 +404,7 @@ Now we will reconfigure Prometheus so that it knows about our application.
 
 Make sure you're in the `{{OPENSHIFT_USER_NAME}}-monitoring` project in OpenShift, and click on **Create Config Maps** button to create a config map. You'll copy and paste the below code into the field.
 
+> In the below `ConfigMap` code, you need to replace `userXX-monitoring` with your username prefix (`{{OPENSHIFT_USER_NAME}}-monitoring`), **and** replace
 > `YOUR_PROMETHEUS_ROUTE` and `YOUR_INVENTORY_ROUTE` with values from your environment, so that Prometheus knows where to scrape metrics from.
 > The values you need can be discovered by running the following commands in the Terminal:
 >
@@ -417,7 +418,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: prometheus-config
-  namespace: {{OPENSHIFT_USER_NAME}}-monitoring
+  namespace: userXX-monitoring
 data:
   prometheus.yml: >-
     # my global config
@@ -477,7 +478,7 @@ Next, we need to _mount_ this ConfigMap in the filesystem of the Prometheus cont
 
 This will trigger a new deployment. Wait for it with:
 
-`oc rollout status -w dc/prometheus -n {{OPENSHIFT_USER_NAME}}-monitoring`
+`oc rollout status -w dc/prometheus -n {{OPENSHIFT_USER_NAME}}-monitoring`username)
 
 ###13. Generate some values for the metrics
 

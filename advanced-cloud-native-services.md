@@ -92,14 +92,6 @@ Consult the [OpenShift documentation](https://docs.openshift.com){:target="_blan
 
 #### Getting Ready for the labs
 
-> **NOTE**
->
-> If you've already completed the **Optimizing Existing Applications** module then you will simply need to import the code for this module. Skip down to the **Import Projects** section.
-
----
-
-##### If this is the first module you are doing today
-
 You will be using Red Hat CodeReady Workspaces, an online IDE based on [Eclipe Che](https://www.eclipse.org/che/){:target="_blank"}{:target="_blank"}. **Changes to files are auto-saved every few seconds**, so you don't need to explicitly save changes.
 
 To get started, [access the Che instance]({{ ECLIPSE_CHE_URL }}){:target="_blank"} and log in using the username and password you've been assigned (e.g. `{{ CHE_USER_NAME }}/{{ CHE_USER_PASSWORD }}`):
