@@ -480,7 +480,7 @@ Next, we need to _mount_ this ConfigMap in the filesystem of the Prometheus cont
 
 This will trigger a new deployment. Wait for it with:
 
-`oc rollout status -w dc/prometheus -n {{OPENSHIFT_USER_NAME}}-monitoring`username)
+`oc rollout status -w dc/prometheus -n {{OPENSHIFT_USER_NAME}}-monitoring`
 
 ###13. Generate some values for the metrics
 
