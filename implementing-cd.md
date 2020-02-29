@@ -41,9 +41,7 @@ Login using:
 
 You will see the OpenShift landing page:
 
-![openshift_landing]({% image_path openshift_landing.png %})
-
-> The project displayed in the landing page depends on which labs you will run today. If you will develop `Service Mesh and Identity` then you will see pre-created projects as the above screeenshot.
+![openshift_landing]({% image_path openshift_landing.png %}) 
 
 Click `Create Project`, fill in the fields, and click `Create`:
 
@@ -266,16 +264,6 @@ Add the following CSS to turn the header bar background to blue (**Copy** to add
 }
 
 ~~~
-
-Now we need to update the catalog endpoint in the monolith application. Copy the route URL of catalog service using following **oc** command in CodeReady Workspaces Terminal.
-
-`echo "http://$(oc get route -n {{OPENSHIFT_USER_NAME}}-catalog | grep catalog | awk '{print $2}')"`
-
-In the **monolith** project (within the root **cloud-native-workshop-v2m2-labs** project), open `catalog.js` in `src/main/webapp/app/services` and add a line as shown in the image to define the value of `baseUrl`.
-
-`baseUrl="http://REPLACEURL/services/products";`
-
-> Replace `REPLACEURL` with the URL emitted from the previous `echo` command
 
 Next, re-build the app once more via CodeReady Workspaces Terminal:
 

@@ -184,11 +184,8 @@ Using project "default".
 Welcome! See 'oc help' to get started.
 ~~~
 
-##### If this is the first module you are doing today
 
-If you've already completed Module 1 (Optimizing Existing Applications), then you will already have the _CoolStore_ app deployed.
-
-**If this is the first module you are completing today, you need to deploy CoolStore monolith application by running this command in a CodeReady Workspaces Terminal:**
+**You need to deploy CoolStore monolith application by running this command in a CodeReady Workspaces Terminal:**
 
 `sh /projects/cloud-native-workshop-v2m2-labs/monolith/scripts/deploy-inventory.sh {{OPENSHIFT_USER_NAME}}`
 
@@ -202,7 +199,7 @@ Wait for the commands to complete. If you see any errors, contact an instructor!
 
 ---
 
-In the previous module, you created a new OpenShift project called **{{OPENSHIFT_USER_NAME}}-coolstore-dev** which represents your developer personal project in which you deployed the CoolStore monolith.
+In the previous module, we created a new OpenShift project called **{{OPENSHIFT_USER_NAME}}-coolstore-dev** which represents your developer personal project in which you deployed the CoolStore monolith.
 
 ##### Verify Application
 

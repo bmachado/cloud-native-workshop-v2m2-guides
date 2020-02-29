@@ -169,6 +169,8 @@ And wait for the result as below:
 In order to trace networking and data transaction, we will call the Inventory service via **curl** commands via CodeReady Workspaces Terminal:
 Be sure to use your route URL of Inventory.
 
+`oc project user1-inventory`
+
 `curl http://$(oc get route inventory-quarkus -o=go-template --template={% raw %}'{{ .spec.host }}'{% endraw %})/services/inventory/165613 ; echo`
 
 Go to _Workloads > Pods_ in the left menu and click on **inventory-quarkus-xxxxxx**.
