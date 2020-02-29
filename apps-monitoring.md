@@ -330,7 +330,7 @@ In this step, we will learn how _Inventory(Quarkus)_ application can utilize the
 
 The metrics can be read remotely using JSON format or the **OpenMetrics** format, so that they can be processed by additional tools such as _Prometheus_, and stored for analysis and visualisation.
 
-We will add Qurakus extensions to the Inventory application for using _smallrye-metrics_ and we'll use the Quarkus Maven Plugin. Copy the following commands to add the smallrye-metricsextension via CodeReady Workspaces Terminal:
+We will add Quarkus extensions to the Inventory application for using _smallrye-metrics_ and we'll use the Quarkus Maven Plugin. Copy the following commands to add the smallrye-metricsextension via CodeReady Workspaces Terminal:
 
 Go to _inventory`_ directory:
 
