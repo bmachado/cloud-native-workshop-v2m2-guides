@@ -1,6 +1,6 @@
 ## Lab1 - Automating Deployments Using Pipelines
 
-In the previous scenarios, you deployed the Coolstore monolith using an OpenShift Template into the **userXX-coolstore-dev** Project. The template created the necessary objects (BuildConfig, DeploymentConfig, ImageStreams, Services, and Routes) and gave you as a Developer a "playground" in which to run the app, make changes and debug.
+In the previous scenarios, you deployed the Coolstore monolith using an OpenShift Template into the **{{OPENSHIFT_USER_NAME}}-coolstore-dev** Project. The template created the necessary objects (BuildConfig, DeploymentConfig, ImageStreams, Services, and Routes) and gave you as a Developer a "playground" in which to run the app, make changes and debug.
 
 In this step, we are now going to setup a separate production environment and explore some best practices and techniques for developers and DevOps teams for getting code from the developer **(that's YOU!)** to production with less downtime and greater consistency.
 
@@ -8,7 +8,7 @@ In this step, we are now going to setup a separate production environment and ex
 
 ---
 
-The existing **userXX-coolstore-dev** project is used as a developer environment for building new versions of the app after code changes and deploying them to the development environment.
+The existing **{{OPENSHIFT_USER_NAME}}-coolstore-dev** project is used as a developer environment for building new versions of the app after code changes and deploying them to the development environment.
 
 In a real project on OpenShift, _dev_, _test_ and _production_ environments would typically use different OpenShift projects and perhaps even different OpenShift clusters.
 
@@ -24,7 +24,7 @@ First, open a new brower with the [OpenShift web console]({{ CONSOLE_URL}}){:tar
 
 Login using:
 
-* Username: `userXX`
+* Username: `{{OPENSHIFT_USER_NAME}}`
 * Password: `r3dh4t1!`
 
 > **NOTE**: Use of self-signed certificates
@@ -47,13 +47,13 @@ You will see the OpenShift landing page:
 
 Click `Create Project`, fill in the fields, and click `Create`:
 
-* Name: **userXX-coolstore-prod**
-* Display Name: **USERXX Coolstore Monolith - Production**
+* Name: **{{OPENSHIFT_USER_NAME}}-coolstore-prod**
+* Display Name: **{{OPENSHIFT_USER_NAME}} Coolstore Monolith - Production**
 * Description: _leave this field empty_
 
-> NOTE: YOU `MUST` USE `userXX-coolstore-prod` AS THE PROJECT NAME, as this name is referenced later on and you will experience failures if you do not name it `userXX-coolstore-prod`.
+> NOTE: YOU `MUST` USE `{{OPENSHIFT_USER_NAME}}-coolstore-prod` AS THE PROJECT NAME, as this name is referenced later on and you will experience failures if you do not name it `{{OPENSHIFT_USER_NAME}}-coolstore-prod`.
 
-This will create a new OpenShift project called **userXX-coolstore-prod** from which our production application will run.
+This will create a new OpenShift project called **{{OPENSHIFT_USER_NAME}}-coolstore-prod** from which our production application will run.
 
 ![create_dialog]({% image_path create_prod_dialog.png %}){:width="700px"}
 
@@ -63,7 +63,7 @@ This will create a new OpenShift project called **userXX-coolstore-prod** from w
 
 In this case we'll use the production template to create the objects. Execute via CodeReady Workspaces Terminal window:
 
-`oc project userXX-coolstore-prod`
+`oc project {{OPENSHIFT_USER_NAME}}-coolstore-prod`
 
 And finally deploy template:
 
@@ -162,7 +162,7 @@ Jenkinsfile contents:
   }
 ~~~
 
-> NOTE: You have to replace your username with **userXX** in Jenkinsfile via clicking on **YAML** tab. For example, if your username is user0, it will be user0-coolstore-dev and user0-coolstore-prod. Don't forget to click on **Save**.
+> NOTE: You have to replace your username with **userXX** in Jenkinsfile via clicking on **YAML** tab. Your username is {{OPENSHIFT_USER_NAME}}, it will be {{OPENSHIFT_USER_NAME}}-coolstore-dev and {{OPENSHIFT_USER_NAME}}-coolstore-prod. Don't forget to click on **Save**.
 
 ![monolith-pipeline]({% image_path coolstore-prod-monolith-update-jenkins.png %})
 
@@ -175,13 +175,13 @@ To simplify the pipeline in this workshop, we simulate the build and tests and s
 
 ---
 
-Before promoting the dev image, you need to modify a **RoleBinding** to access the dev image by Jenkins. This allows the Jenkins service account in the **userXX-coolstore-prod** project to access the image within the **userXX-coolstore-dev** project.
+Before promoting the dev image, you need to modify a **RoleBinding** to access the dev image by Jenkins. This allows the Jenkins service account in the **{{OPENSHIFT_USER_NAME}}-coolstore-prod** project to access the image within the **{{OPENSHIFT_USER_NAME}}-coolstore-dev** project.
 
-Go to overview page of the `userXX-coolstore-dev` project, then navigate to _Administration > Role Bindings_. Click on **ci_admin**:
+Go to overview page of the `{{OPENSHIFT_USER_NAME}}-coolstore-dev` project, then navigate to _Administration > Role Bindings_. Click on **ci_admin**:
 
 ![Prod]({% image_path coolstore-dev-ci-admin.png %})
 
-Move to **YAML** tab and replace your username with _userXX_ then click on **Save**:
+Move to **YAML** tab and replace _userXX_ with your username {{OPENSHIFT_USER_NAME}} then click on **Save**:
 
 ![Prod]({% image_path coolstore-dev-ci-admin-save.png %})
 
@@ -267,9 +267,9 @@ Add the following CSS to turn the header bar background to blue (**Copy** to add
 
 ~~~
 
-Now we need to update the catalog endpoint in the monolith application. Copy the route URL of catalog service using following **oc** command in CodeReady Workspaces Terminal. Replace your username with **userXX**:
+Now we need to update the catalog endpoint in the monolith application. Copy the route URL of catalog service using following **oc** command in CodeReady Workspaces Terminal.
 
-`echo "http://$(oc get route -n userXX-catalog | grep catalog | awk '{print $2}')"`
+`echo "http://$(oc get route -n {{OPENSHIFT_USER_NAME}}-catalog | grep catalog | awk '{print $2}')"`
 
 In the **monolith** project (within the root **cloud-native-workshop-v2m2-labs** project), open `catalog.js` in `src/main/webapp/app/services` and add a line as shown in the image to define the value of `baseUrl`.
 
@@ -285,19 +285,19 @@ Next, re-build the app once more via CodeReady Workspaces Terminal:
 
 And re-deploy it to the dev environment using a binary build just as we did before via CodeReady Workspaces Terminal:
 
-`oc start-build -n userXX-coolstore-dev coolstore --from-file=deployments/ROOT.war --follow`
+`oc start-build -n {{OPENSHIFT_USER_NAME}}-coolstore-dev coolstore --from-file=deployments/ROOT.war --follow`
 
 Now wait for it to complete the deployment via CodeReady Workspaces Terminal:
 
-`oc -n userXX-coolstore-dev rollout status -w dc/coolstore`
+`oc -n {{OPENSHIFT_USER_NAME}}-coolstore-dev rollout status -w dc/coolstore`
 
-And verify that the blue header is visible in the dev application by navigating to the `userXX-coolstore-dev` project in the OpenShift Console, and then going to _Networking > Routes_ and clicking on the route URL. It should look like the following:
+And verify that the blue header is visible in the dev application by navigating to the `{{OPENSHIFT_USER_NAME}}-coolstore-dev` project in the OpenShift Console, and then going to _Networking > Routes_ and clicking on the route URL. It should look like the following:
 
 > If it doesn't, you may need to do a hard browser refresh. Try holding the shift key while clicking the browser refresh button.
 
 ![Dev]({% image_path nav-blue.png %})
 
-Then navigating to the `userXX-coolstore-prod` project in the OpenShift Console, and then going to _Networking > Routes_ and clicking on the route URL for the production app. It should still be black:
+Then navigating to the `{{OPENSHIFT_USER_NAME}}-coolstore-prod` project in the OpenShift Console, and then going to _Networking > Routes_ and clicking on the route URL for the production app. It should still be black:
 
 ![Prod]({% image_path pipe-orig.png %})
 
@@ -313,7 +313,7 @@ Invoke the pipeline once more by navigating to _Builds > Build Configs > monolit
 
 Click on the link for **Input Required**. This will open a new tab and direct you to Jenkins itself, where you can login with the same credentials as OpenShift:
 
-* Username: `userXX`
+* Username: `{{OPENSHIFT_USER_NAME}}`
 * Password: `r3dh4t1!`
 
 Accept the browser certificate warning and the Jenkins/OpenShift permissions, and then you'll find yourself at the approval prompt:
@@ -332,7 +332,7 @@ Once you click _Proceed_, you will see the log file from Jenkins showing the fin
 
 Wait for the production deployment to complete via CodeReady Workspaces Terminal:
 
-`oc rollout -n userXX-coolstore-prod status -w dc/coolstore-prod`
+`oc rollout -n {{OPENSHIFT_USER_NAME}}-coolstore-prod status -w dc/coolstore-prod`
 
 Once it completes, verify that the production application has the new change (blue header):
 
@@ -352,9 +352,9 @@ You can get see the webhook links in the [OpenShift web console]({{ CONSOLE_URL}
 
 Then go back to the _Overview_ tab. At the bottom you'll find the _Generic_ webhook url which you will need (along with the secret) in the next steps.
 
-Go to your Git repository at `{{ GIT_URL }}/userXX/cloud-native-workshop-v2m2-labs.git` (replace `userXX` with your username and open this URL in a new tab), Click **Sign In** and sign in with your credentials:
+Go to your Git repository at `{{ GIT_URL }}/{{OPENSHIFT_USER_NAME}}/cloud-native-workshop-v2m2-labs.git`, Click **Sign In** and sign in with your credentials:
 
-* Username: `userXX` (replace with your username)
+* Username: `{{OPENSHIFT_USER_NAME}}` (replace with your username)
 * Password: `r3dh4t1!`
 
  then click on **Settings**.

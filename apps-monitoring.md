@@ -35,8 +35,8 @@ In the [OpenShift web console]({{ CONSOLE_URL}}){:target="_blank"}, create a new
 
 Click **Create Project**, fill in the fields, and click **Create**:
 
-* Name: **userXX-monitoring**
-* Display Name: **USERXX CoolStore App Monitoring Tools**
+* Name: **{{OPENSHIFT_USER_NAME}}-monitoring**
+* Display Name: **{{OPENSHIFT_USER_NAME}} CoolStore App Monitoring Tools**
 * Description: _leave this field empty_
 
 ![create_dialog]({% image_path create_monitoring_dialog.png %}){:width="700"}
@@ -51,7 +51,7 @@ This template uses an in-memory storage with a limited functionality for local t
 
 Install everything in the current namespace via CodeReady Workspaces Terminal:
 
-`oc project userXX-monitoring`
+`oc project {{OPENSHIFT_USER_NAME}}-monitoring`
 
 `oc process -f /projects/cloud-native-workshop-v2m2-labs/monitoring/jaeger-all-in-one-template.yml | oc create -f -`
 
@@ -111,9 +111,9 @@ If builds successfully (you will see _BUILD SUCCESS_), you will see _smallrye-op
 
 ---
 
-Before getting started with this step, confirm your **jaeger-collector** service in _userXX-monitoring_ project via **oc** command in CodeReady Workspaces Terminal:
+Before getting started with this step, confirm your **jaeger-collector** service in _{{OPENSHIFT_USER_NAME}}-monitoring_ project via **oc** command in CodeReady Workspaces Terminal:
 
-`oc get svc -n userXX-monitoring | grep jaeger`
+`oc get svc -n {{OPENSHIFT_USER_NAME}}-monitoring | grep jaeger`
 
 ~~~shell
 jaeger-agent       ClusterIP      None             <none>                                                                         5775/UDP,6831/UDP,6832/UDP,5778/TCP   4d3h
@@ -125,14 +125,12 @@ The easiest way to configure the **Jaeger tracer** is to set up in the applicati
 
 Open `src/main/resources/application.properties` file and add the following configuration via CodeReady Workspaces Terminal:
 
-> You need to replace **userXX** with your username in the configuration.
-
 ~~~
 # Jaeger configuration
 quarkus.jaeger.service-name=inventory
 quarkus.jaeger.sampler-type=const
 quarkus.jaeger.sampler-param=1
-quarkus.jaeger.endpoint=http://jaeger-collector.userXX-monitoring:14268/api/traces
+quarkus.jaeger.endpoint=http://jaeger-collector.{{OPENSHIFT_USER_NAME}}-monitoring:14268/api/traces
 ~~~
 
 You can also specify the configuration using environment variables or JVM properties. See [Jaeger Features](https://www.jaegertracing.io/docs/1.12/client-features/){:target="_blank"}.
@@ -154,11 +152,11 @@ Repackage the inventory application via clicking on **Package for OpenShift** in
 
 Start and watch the build, which will take about a minute to complete:
 
-`oc start-build inventory-quarkus --from-file target/*-runner.jar --follow -n userXX-inventory`
+`oc start-build inventory-quarkus --from-file target/*-runner.jar --follow -n {{OPENSHIFT_USER_NAME}}-inventory`
 
 You should see a **Push successful** at the end of the build output and it. To verify that deployment is started and completed automatically, run the following command via CodeReady Workspaces Terminal :
 
-`oc rollout status -w dc/inventory-quarkus -n userXX-inventory`
+`oc rollout status -w dc/inventory-quarkus -n {{OPENSHIFT_USER_NAME}}-inventory`
 
 And wait for the result as below:
 
@@ -200,7 +198,7 @@ If you click on **Span** and you will see a logical unit of work in Jaeger that 
 
 Let's make more traces! Open a new web browser to access _CoolStore Inventory Page_ using its route (on _Networking > Routes_ in the OpenShift Console):
 
-> If you do not see the `inventory` route listed, be sure you've chosen the `userXX-inventory` project in the Project selector dropdown!
+> If you do not see the `inventory` route listed, be sure you've chosen the `{{OPENSHIFT_USER_NAME}}-inventory` project in the Project selector dropdown!
 
 ![jaeger_ui]({% image_path jaeger-coolstore.png %})
 
@@ -218,7 +216,7 @@ OpenShift Container Platform ships with a pre-configured and self-updating monit
 
 However, we will deploy custom **Prometheus** to scrape services metrics of Inventory and Catalog applications. Then we will visualize the metrics data via custom **Grafana** dashboards deployment.
 
-Go to _Project Status_ page in _userXX-monitoring_ project and click on **Deploy Image** under _Add_ on the right top menu:
+Go to _Project Status_ page in _{{OPENSHIFT_USER_NAME}}-monitoring_ project and click on **Deploy Image** under _Add_ on the right top menu:
 
 ![Prometheus]({% image_path add-to-project.png %})
 
@@ -250,7 +248,7 @@ You will see the landing page of Prometheus as shown:
 
 ![Prometheus]({% image_path prometheus-webui.png %})
 
-Let's deploy **Grafana Dashboards** to OpenShift. Go to _Project Status_ page in _userXX-monitoring_ project and click on **Deploy Image** under _Add_ menu:
+Let's deploy **Grafana Dashboards** to OpenShift. Go to _Project Status_ page in _{{OPENSHIFT_USER_NAME}}-monitoring_ project and click on **Deploy Image** under _Add_ menu:
 
 ![Grafana]({% image_path add-to-project-grafana.png %})
 
@@ -311,12 +309,12 @@ Click Add data source and select **Prometheus** as data source type.
 
 ![Grafana]({% image_path grafana-datasource-types.png %})
 
-Next, input the following variables to configure the dashboard. Make sure to replace the default HTTP URL with your _Prometheus Route URL_ which should be `http://prometheus.userXX-monitoring:9090` (replace `userXX with your username).
+Next, input the following variables to configure the dashboard. Make sure to replace the default HTTP URL with your _Prometheus Route URL_ which should be `http://prometheus.{{OPENSHIFT_USER_NAME}}-monitoring:9090`.
 
 Click on **Save & Test** then you will see the _Data source is working_ message.
 
 * Name: CloudNativeApps
-* HTTP URL: http://prometheus.userXX-monitoring:9090
+* HTTP URL: http://prometheus.{{OPENSHIFT_USER_NAME}}-monitoring:9090
 
 ![Grafana]({% image_path grafana-setting.png %})
 
@@ -392,26 +390,25 @@ Or you can run a maven plugin command directly in Terminal:
 
 Start and watch the build, which will take about a minute to complete:
 
-`oc start-build inventory-quarkus --from-file target/*-runner.jar --follow -n userxx-inventory`
+`oc start-build inventory-quarkus --from-file target/*-runner.jar --follow -n {{OPENSHIFT_USER_NAME}}-inventory`
 
 Finally, make sure it's actually done rolling out:
 
-`oc rollout status -w dc/inventory-quarkus -n userxx-inventory`
+`oc rollout status -w dc/inventory-quarkus -n {{OPENSHIFT_USER_NAME}}-inventory`
 
-Go to the _userXX-monitoring_ project in [OpenShift web console]({{ CONSOLE_URL}}){:target="_blank"} and then on the left sidebar, _Workloads > Config Maps_.
+Go to the _{{OPENSHIFT_USER_NAME}}-monitoring_ project in [OpenShift web console]({{ CONSOLE_URL}}){:target="_blank"} and then on the left sidebar, _Workloads > Config Maps_.
 
 Now we will reconfigure Prometheus so that it knows about our application.
 
 ![prometheus]({% image_path prometheus-quarkus-configmap.png %})
 
-Make sure you're in the `userXX-monitoring` project in OpenShift, and click on **Create Config Maps** button to create a config map. You'll copy and paste the below code into the field.
+Make sure you're in the `{{OPENSHIFT_USER_NAME}}-monitoring` project in OpenShift, and click on **Create Config Maps** button to create a config map. You'll copy and paste the below code into the field.
 
-> In the below `ConfigMap` code, you need to replace `userXX-monitoring` with your username prefix (e.g. `user9-monitoring`), **and** replace
 > `YOUR_PROMETHEUS_ROUTE` and `YOUR_INVENTORY_ROUTE` with values from your environment, so that Prometheus knows where to scrape metrics from.
 > The values you need can be discovered by running the following commands in the Terminal:
 >
-> * Prometheus Route: `oc get route prometheus -n userxx-monitoring -o=go-template --template={% raw %}'{{ .spec.host }}'{% endraw %}`
-> * Inventory Route: `oc get route inventory-quarkus -n userxx-inventory -o=go-template --template={% raw %}'{{ .spec.host }}'{% endraw %}`
+> * Prometheus Route: `oc get route prometheus -n {{OPENSHIFT_USER_NAME}}-monitoring -o=go-template --template={% raw %}'{{ .spec.host }}'{% endraw %}`
+> * Inventory Route: `oc get route inventory-quarkus -n {{OPENSHIFT_USER_NAME}}-inventory -o=go-template --template={% raw %}'{{ .spec.host }}'{% endraw %}`
 
 Paste in this code and then replace the values as shown in the image below:
 
@@ -420,7 +417,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: prometheus-config
-  namespace: userXX-monitoring
+  namespace: {{OPENSHIFT_USER_NAME}}-monitoring
 data:
   prometheus.yml: >-
     # my global config
@@ -472,22 +469,22 @@ Config maps hold key-value pairs and in the above command a `prometheus-config` 
 
 Confirm you created the config map using the terminal command:
 
-`oc describe cm prometheus-config -n userXX-monitoring` (replace `userXX` with your username)
+`oc describe cm prometheus-config -n {{OPENSHIFT_USER_NAME}}-monitoring`
 
-Next, we need to _mount_ this ConfigMap in the filesystem of the Prometheus container so that it can read it. Run this command to alter the Prometheus deployment to mount it (replace `userXX` with your username)
+Next, we need to _mount_ this ConfigMap in the filesystem of the Prometheus container so that it can read it. Run this command to alter the Prometheus deployment to mount it
 
-`oc set volume -n userXX-monitoring dc/prometheus --add -t configmap --configmap-name=prometheus-config -m /etc/prometheus/prometheus.yml --sub-path=prometheus.yml`
+`oc set volume -n {{OPENSHIFT_USER_NAME}}-monitoring dc/prometheus --add -t configmap --configmap-name=prometheus-config -m /etc/prometheus/prometheus.yml --sub-path=prometheus.yml`
 
 This will trigger a new deployment. Wait for it with:
 
-`oc rollout status -w dc/prometheus -n userXX-monitoring` (replace `userXX` with your username)
+`oc rollout status -w dc/prometheus -n {{OPENSHIFT_USER_NAME}}-monitoring`
 
 ###13. Generate some values for the metrics
 
 ---
 
-Let's write a loop to call our inventory service multiple times. First, get the URL to it (replace `userXX` with your username):
-`INV_URL=$(oc get route inventory-quarkus -n userxx-inventory -o=go-template --template={% raw %}'{{ .spec.host }}'{% endraw %})`
+Let's write a loop to call our inventory service multiple times. First, get the URL to it:
+`INV_URL=$(oc get route inventory-quarkus -n {{OPENSHIFT_USER_NAME}}-inventory -o=go-template --template={% raw %}'{{ .spec.host }}'{% endraw %})`
 
 Next, run this in the same Terminal:
 
@@ -503,7 +500,7 @@ Let's review the generated metrics. We have 3 ways to view the metrics:
 
 Let's look at it with `curl` in a separate terminal:
 
-`INV_URL=$(oc get route inventory-quarkus -n userxx-inventory -o=go-template --template={% raw %}'{{ .spec.host }}'{% endraw %})`
+`INV_URL=$(oc get route inventory-quarkus -n {{OPENSHIFT_USER_NAME}}-inventory -o=go-template --template={% raw %}'{{ .spec.host }}'{% endraw %})`
 
 and then
 
@@ -539,7 +536,7 @@ You can play with the values for time and see different data across different ti
 
 Now let's use Grafana.
 
-**3)** Open the **Grafana Web UI** (visit _Networking > Routes_ in the `userXX-monitoring project in the OpenShift console) via a web brower and create a new _Dashboard_ to review the metrics.
+**3)** Open the **Grafana Web UI** (visit _Networking > Routes_ in the `{{OPENSHIFT_USER_NAME}}-monitoring project in the OpenShift console) via a web brower and create a new _Dashboard_ to review the metrics.
 
 ![metrics_grafana]({% image_path grafana-create-dashboard.png %})
 
@@ -652,7 +649,7 @@ Wait for that command to report replication controller "catalog-springboot-XX" s
 
 Let's acess the metrics from the catalog service. Access them via `curl` with these commands:
 
-`CAT_URL=$(oc get route catalog-springboot -n userXX-catalog -o=go-template --template={% raw %}'{{ .spec.host }}'{% endraw %})`
+`CAT_URL=$(oc get route catalog-springboot -n {{OPENSHIFT_USER_NAME}}-catalog -o=go-template --template={% raw %}'{{ .spec.host }}'{% endraw %})`
 
 and then:
 
@@ -690,9 +687,9 @@ This is the raw output from the application that Prometheus will periodically re
 
 You'll need the catalog route once again, which you can discover using this in the Terminal:
 
-`oc get route catalog-springboot -n userXX-catalog -o=go-template --template={% raw %}'{{ .spec.host }}'{% endraw %}; echo`
+`oc get route catalog-springboot -n {{OPENSHIFT_USER_NAME}}-catalog -o=go-template --template={% raw %}'{{ .spec.host }}'{% endraw %}; echo`
 
-Navigate to your `userXX-monitoring` project in OpenShift console, and go to `Workloads > Config Maps > prometheus_config`. Click on the _YAML_ tab.
+Navigate to your `{{OPENSHIFT_USER_NAME}}-monitoring` project in OpenShift console, and go to `Workloads > Config Maps > prometheus_config`. Click on the _YAML_ tab.
 
 Edit to add the following contents below the existing `job_name` elements (and with the same indentation):
 
@@ -710,7 +707,7 @@ Click on **Save**.
 
 ![prometheus]({% image_path prometheus-quarkus-configmap-detail-sb.png %})
 
-OpenShift does not automatically redeploy whenever ConfigMaps are changed, so let's force a redeployment. Select the `userXX-monitoring` project in the OpenShift console, navigate to  _Workloads > Deployment Configs > prometheus_  and select **Start Rollout** from the _Actions_ menu:
+OpenShift does not automatically redeploy whenever ConfigMaps are changed, so let's force a redeployment. Select the `{{OPENSHIFT_USER_NAME}}-monitoring` project in the OpenShift console, navigate to  _Workloads > Deployment Configs > prometheus_  and select **Start Rollout** from the _Actions_ menu:
 
 ![prometheus]({% image_path prometheus-redeploy.png %})
 
