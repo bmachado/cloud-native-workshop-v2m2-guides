@@ -641,7 +641,7 @@ end of the build output.
 
 And then re-build the container image, which will take about a minute to complete:
 
-`oc start-build -n userNN-catalog catalog-springboot --from-file target/catalog-1.0.0-SNAPSHOT.jar --follow` (replace `userNN` with your username!)
+`oc start-build -n {{OPENSHIFT_USER_NAME}}-catalog catalog-springboot --from-file target/catalog-1.0.0-SNAPSHOT.jar --follow`
 
 Once the build is done, it will automatically start a new deployment. Wait for it to complete:
 
