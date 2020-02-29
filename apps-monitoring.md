@@ -645,7 +645,7 @@ And then re-build the container image, which will take about a minute to complet
 
 Once the build is done, it will automatically start a new deployment. Wait for it to complete:
 
-`oc rollout status -w dc/catalog-springboot`
+`oc rollout status -w dc/catalog-springboot -n {{OPENSHIFT_USER_NAME}}-catalog`
 
 Wait for that command to report replication controller "catalog-springboot-XX" successfully rolled out before continuing.
 
