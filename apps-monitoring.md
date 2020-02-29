@@ -487,6 +487,7 @@ This will trigger a new deployment. Wait for it with:
 ---
 
 Let's write a loop to call our inventory service multiple times. First, get the URL to it:
+
 `INV_URL=$(oc get route inventory-quarkus -n {{OPENSHIFT_USER_NAME}}-inventory -o=go-template --template={% raw %}'{{ .spec.host }}'{% endraw %})`
 
 Next, run this in the same Terminal:
